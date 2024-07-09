@@ -28,13 +28,10 @@ jobs:
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
       - name: SonarQube Pull Request Comment
-       if: always()
-       uses: campos-pay/sonarqube-pr-comment@main
-       with:
-         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-         SONAR_PROJECTKEY: my-app
-         GITHUB-TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-
-            
+        if: always()
+        uses: campos-pay/sonarqube-pr-comment@main
+        with:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECTKEY: my-app
+          GITHUB-TOKEN: ${{ secrets.GITHUB_TOKEN }}
