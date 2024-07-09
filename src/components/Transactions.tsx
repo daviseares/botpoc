@@ -1,6 +1,9 @@
 import React from 'react';
 
 const Transactions: React.FC = () => {
+  const a = '2'
+  const b = '3'
+  console.log(a == b)
   return (
     <div className="mt-4">
       <h2 className="text-lg font-bold">ÚLTIMAS TRANSAÇÕES</h2>
