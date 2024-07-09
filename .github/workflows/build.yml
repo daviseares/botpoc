@@ -27,11 +27,36 @@ jobs:
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
-      - name: SonarQube Pull Request Comment
-        if: always()
-        uses: campos-pay/sonarqube-pr-comment@main
-        with:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_PROJECTKEY: my-app
-          GITHUB-TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Process SonarQube Results
+        run: |
+          # Aqui você processaria os resultados do SonarQube e geraria um arquivo JSON com os detalhes dos problemas
+          # Exemplo de comando fictício:
+          # sonar-scanner -Dsonar.analysis.mode=preview -Dsonar.report.export.path=sonar-report.json
+          echo "Processando resultados do SonarQube..."
+      - name: Create GitHub Review Comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Exemplo de script shell para criar comentários de revisão
+          # Ler o arquivo JSON com os resultados do SonarQube
+          sonar_results=$(cat sonar-report.json)
+          
+          # Iterar sobre os problemas encontrados e criar comentários de revisão
+          echo "$sonar_results" | jq -c '.issues[]' | while read issue; do
+            file_path=$(echo "$issue" | jq -r '.component')
+            line=$(echo "$issue" | jq -r '.line')
+            message=$(echo "$issue" | jq -r '.message')
+            
+            # Criar comentário de revisão usando a API do GitHub
+            curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments \
+              -d @- << EOF
+              {
+                "body": "$message",
+                "commit_id": "${{ github.event.pull_request.head.sha }}",
+                "path": "$file_path",
+                "position": $line
+              }
+EOF
+          done
