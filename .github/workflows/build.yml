@@ -27,18 +27,21 @@ jobs:
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
-      - name: Process SonarQube Results
+      - name: Generate SonarQube Report
         run: |
-          # Aqui você processaria os resultados do SonarQube e geraria um arquivo JSON com os detalhes dos problemas
-          # Exemplo de comando fictício:
-          # sonar-scanner -Dsonar.analysis.mode=preview -Dsonar.report.export.path=sonar-report.json
-          echo "Processando resultados do SonarQube..."
+          # Comando fictício para gerar o arquivo JSON com os resultados do SonarQube
+          sonar-scanner -Dsonar.analysis.mode=preview -Dsonar.report.export.path=sonar-report.json
       - name: Create GitHub Review Comments
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Exemplo de script shell para criar comentários de revisão
           # Ler o arquivo JSON com os resultados do SonarQube
+          if [ ! -f sonar-report.json ]; then
+            echo "Arquivo sonar-report.json não encontrado!"
+            exit 1
+          fi
+          
           sonar_results=$(cat sonar-report.json)
           
           # Iterar sobre os problemas encontrados e criar comentários de revisão
