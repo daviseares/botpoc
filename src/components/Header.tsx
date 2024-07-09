@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Header: React.FC = () => {
+const Header: any= () => {
   return (
     <header className="flex justify-between items-center p-4">
       <h1 className="text-2xl font-bold">Oi, <span className="font-normal">Davi</span></h1>
