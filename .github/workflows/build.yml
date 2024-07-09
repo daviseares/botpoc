@@ -27,17 +27,14 @@ jobs:
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
-      - name: Fetch SonarQube Issues
-        run: |
-          curl -u ${{ secrets.SONAR_TOKEN }}: \
-            "https://sonarcloud.io/api/issues/search?componentKeys=daviseares_botpoc&pullRequest=${{ github.event.pull_request.number }}" \
-            -o sonar_issues.json
-      - name: Comment on PR
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ## SonarQube Issues
-            $(jq -r '.issues[] | "- [\(.message)](\(.projectUrl))"' sonar_issues.json)
+      - name: SonarQube Pull Request Comment
+       if: always()
+       uses: campos-pay/sonarqube-pr-comment@main
+       with:
+         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+         SONAR_PROJECTKEY: my-app
+         GITHUB-TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+
+            
