@@ -1,10 +1,10 @@
 import React from 'react';
 
 interface BenefitCardProps {
-  color: string;
-  amount: string;
-  label: string;
-  icon: string;
+  color: any;
+  amount: any;
+  label: any;
+  icon: any;
 }
 
 const BenefitCard: React.FC<BenefitCardProps> = ({ color, amount, label, icon }) => {

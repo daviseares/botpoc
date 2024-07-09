@@ -1,6 +1,10 @@
 import React from 'react';
 
 const Actions: React.FC = () => {
+  const teste = 'pega agora que eu quero ver'
+  const dois = 'ok'
+
+  console.log(dois == teste)
   return (
     <div className="mt-4">
       <h2 className="text-lg font-bold">AÇÕES</h2>
